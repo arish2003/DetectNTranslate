@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DetectNTranslate</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-color: #e9ecef; /* Default light theme */
+            font-family: 'Arial', sans-serif;
+            transition: background-color 0.5s, color 0.5s;
+        }
+        .container {
+            background-color: #ffffff; /* Default light theme */
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-top: 50px;
+            transition: background-color 0.5s, color 0.5s;
+            position: relative; /* For absolute positioning of toggle */
+        }
+        .dark-theme {
+            background-color: #000000; /* Complete dark mode background */
+            color: #ffffff; /* Dark theme text color */
+        }
+        .dark-theme .container {
+            background-color: #212529; /* Dark theme container */
+        }
+        h1 {
+            color: #343a40; /* Default light theme */
+            font-weight: bold; /* Title in bold */
+        }
+        .dark-theme h1 {
+            color: #ffffff; /* Dark theme h1 */
+        }
+        .form-control, .form-control:focus {
+            border-color: #007bff;
+            box-shadow: none;
+            border-radius: 8px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            border-radius: 8px;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .btn-secondary {
+            margin-left: 10px;
+            border-radius: 8px;
+        }
+        .result-section {
+            border-top: 1px solid #dee2e6;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        .result-section h4 {
+            color: #343a40; /* Default light theme */
+            font-weight: normal; /* Result in normal weight */
+            font-size: 1rem; /* Slightly larger font size for results */
+        }
+        .dark-theme .result-section h4 {
+            color: #ffffff; /* Dark theme result section text */
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .fa {
+            margin-right: 5px;
+        }
+        /* Toggle switch styles */
+        .toggle-btn {
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 15px; /* Position it at the right edge of the container */
+        }
+        .toggle-btn input {
+            display: none; /* Hide the default checkbox */
+        }
+        .slider {
+            width: 34px;
+            height: 20px;
+            position: relative;
+            display: inline-block;
+            background-color: #ccc; /* Background of the slider */
+            border-radius: 20px;
+            transition: background-color 0.4s;
+        }
+        .slider:before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 0;
+            bottom: 0;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.4s;
+        }
+        input:checked + .slider {
+            background-color: #007bff; /* Background color when checked */
+        }
+        input:checked + .slider:before {
+            transform: translateX(14px); /* Move the toggle to the right */
+        }
+    </style>
+    <script>
+        function clearText() {
+            document.getElementById("text").value = "";  // Clear the textarea
+            document.getElementById("result-detected-lang").innerHTML = "";  // Clear detected language
+            document.getElementById("result-translation").innerHTML = "";  // Clear translation
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+        }
+    </script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">
+            <i class="fas fa-language"></i> DetectNTranslate
+        </h1>
+        <form method="post" action="/trans" class="mt-4">
+            <div class="form-group">
+                <label for="text">Input Your Text Here:</label>
+                <textarea class="form-control" id="text" name="text" rows="4" required>{{ request.form.get('text', '') }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="target_lang">Pick a language for translation:</label>
+                <select class="form-control" id="target_lang" name="target_lang" required>
+                    <option value="" disabled selected>Select your desired language</option> <!-- Updated -->
+                    {% for lang_code, lang_name in languages.items() %}
+                        <option value="{{ lang_code }}">{{ lang_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Translate</button>
+                <button type="button" class="btn btn-secondary" onclick="clearText()">Clear</button>
+                <label class="toggle-btn">
+                    <input type="checkbox" onchange="toggleTheme()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </form>
+        {% if translation %}
+            <div class="result-section mt-4">
+                <h4 id="result-detected-lang">Language Recognized: <span>{{ detected_lang }}</span></h4>
+                <h4 id="result-translation">Translated Content: <span>{{ translation }}</span></h4>
+            </div>
+        {% endif %}
+        
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
