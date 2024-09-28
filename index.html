@@ -124,7 +124,7 @@
         }
     </script>
 </head>
-<body>
+<body class="{{ 'dark-theme' if theme == 'dark' else '' }}">
     <div class="container mt-5">
         <h1 class="text-center mb-4">
             <i class="fas fa-language"></i> DetectNTranslate
@@ -137,7 +137,7 @@
             <div class="form-group">
                 <label for="target_lang">Pick a language for translation:</label>
                 <select class="form-control" id="target_lang" name="target_lang" required>
-                    <option value="" disabled selected>Select your desired language</option> <!-- Updated -->
+                    <option value="" disabled selected>Select your desired language</option>
                     {% for lang_code, lang_name in languages.items() %}
                         <option value="{{ lang_code }}">{{ lang_name }}</option>
                     {% endfor %}
@@ -147,9 +147,10 @@
                 <button type="submit" class="btn btn-primary">Translate</button>
                 <button type="button" class="btn btn-secondary" onclick="clearText()">Clear</button>
                 <label class="toggle-btn">
-                    <input type="checkbox" onchange="toggleTheme()">
+                    <input type="checkbox" onchange="toggleTheme(); document.getElementById('theme').value = this.checked ? 'dark' : 'light';" {% if theme == 'dark' %}checked{% endif %}>
                     <span class="slider"></span>
                 </label>
+                <input type="hidden" id="theme" name="theme" value="{% if theme == 'dark' %}dark{% else %}light{% endif %}">
             </div>
         </form>
         {% if translation %}
@@ -158,7 +159,6 @@
                 <h4 id="result-translation">Translated Content: <span>{{ translation }}</span></h4>
             </div>
         {% endif %}
-        
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
