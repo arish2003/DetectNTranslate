@@ -58,6 +58,13 @@ To get a local copy up and running, follow these simple steps:
 3. Click the "Translate" button to see the results.
 4. Use the "Clear" button to reset the form if needed.
 
+
+## 📱 Screenshots
+
+![Home_Page](screenshots/Home_Page_Dark.png)
+![Detected&Translated](screenshots/Detected&Translated.png)
+
+
 ## 🛠️ Contributing
 Contributions are welcome! If you have suggestions for improvements or new features, feel free to create an issue or submit a pull request. We appreciate all contributions to make DetectNTranslate even better.
 
